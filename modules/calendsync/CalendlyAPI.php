@@ -93,10 +93,24 @@ class CalendlyAPI
             $details = $GLOBALS['db']->fetchByAssoc($getMeetingResult);
             $meetingId = $details && isset($details['id']) ? $details['id'] : "";
             if ($meetingId) {
-                $getMetting = BeanFactory::getBean("Meetings", $meetingId);
-                $getMetting->calendsync_cancel_reason = $cancelReason;
-                $getMetting->status = "Not Held";
-                $getMetting->save();
+                $getMeeting = BeanFactory::getBean("Meetings", $meetingId);
+                $getMeeting->calendsync_cancel_reason = $cancelReason;
+                $getMeeting->status = "Not Held";
+                $getMeeting->save();
+            }
+        }
+    }
+
+    public function noShowMeeting(string $eventId, string $inviteeEmail)
+    {
+        if ($eventId && $inviteeEmail) {
+            $getMeeting = "SELECT id FROM `meetings` WHERE `calendsync_uuid` LIKE '" . $eventId . "'";
+            $getMeetingResult = $GLOBALS['db']->query($getMeeting);
+            $details = $GLOBALS['db']->fetchByAssoc($getMeetingResult);
+            $meetingId = $details && isset($details['id']) ? $details['id'] : "";
+            if ($meetingId) {
+                $getMeeting = BeanFactory::getBean("Meetings", $meetingId);
+                $getMeeting->calendsync_no_show = "Yes";
             }
         }
     }

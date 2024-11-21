@@ -23,7 +23,7 @@ class CalendsyncViewEdit extends SugarView
 
         $formString = <<<FORM
             <form method="post" action="index.php?module=calendsync&action=saveTokens">
-                <h2 style="margin: 0 0 5px;">Calendly API Tokens</h2>
+                <h2 style="margin: 0 0 5px;">Calendly API Configuration</h2>
                 <p style="margin: 0">Enter your Calendly API Information</p>
                 <div>
                     <input type="hidden" name="module" value="calendsync">

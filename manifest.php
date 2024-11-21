@@ -1,6 +1,6 @@
 <?php
 $manifest = array(
-    'acceptable_sugar_versions' =>  array(
+    'acceptable_sugar_versions' => array(
         'regex_matches' => array(
             '.*',
         ),
@@ -25,28 +25,54 @@ $manifest = array(
 $installdefs = array(
     'id' => 'calendsync',
     'copy' =>
-    array(
-        0 =>
         array(
-            'from' => '<basepath>/modules/calendsync',
-            'to' => 'modules/calendsync',
+            0 =>
+                array(
+                    'from' => '<basepath>/modules/calendsync',
+                    'to' => 'modules/calendsync',
+                ),
+            1 =>
+                array(
+                    'from' => '<basepath>/custom/Extension/application/Ext/EntryPointRegistry/calendsync.php',
+                    'to' => 'custom/Extension/application/Ext/EntryPointRegistry/calendsync.php',
+                ),
+            2 =>
+                array(
+                    'from' => '<basepath>/custom/Extension/modules/Meetings/Ext/Vardefs',
+                    'to' => 'custom/Extension/modules/Meetings/Ext/Vardefs',
+                ),
+            3 =>
+                array(
+                    'from' => '<basepath>/custom/Extension/modules/Meetings/Ext/Language/en_us.suite_calendsync.php',
+                    'to' => 'custom/Extension/modules/Meetings/Ext/Language/en_us.suite_calendsync.php',
+                )
         ),
-        1 =>
+    'language' =>
         array(
-            'from' => '<basepath>/custom/Extension/application/Ext/EntryPointRegistry/calendsync.php',
-            'to' => 'custom/Extension/application/Ext/EntryPointRegistry/calendsync.php',
+            0 =>
+                array(
+                    'from' => '<basepath>/custom/Extension/modules/Administration/Ext/Language/en_us.calendsync.php',
+                    'to_module' => 'Administration',
+                    'language' => 'en_us'
+                ),
+
         ),
-        2 =>
+    'administration' =>
         array(
-            'from' => '<basepath>/custom/Extension/modules/Meetings/Ext/Vardefs',
-            'to' => 'custom/Extension/modules/Meetings/Ext/Vardefs',
+            0 =>
+                array(
+                    'from' => '<basepath>/custom/Extension/modules/Administration/Ext/Administration/calendsync_admin.php',
+                    'to' => 'custom/Extension/modules/Administration/Ext/Administration/calendsync_admin.php',
+                ),
         ),
-        3 =>
+    'action_view_map' =>
         array(
-            'from' => '<basepath>/custom/Extension/modules/Meetings/Ext/Language/en_us.suite_calendsync.php',
-            'to' => 'custom/Extension/modules/Meetings/Ext/Language/en_us.suite_calendsync.php',
-        )
-    ),
+            0 =>
+                array(
+                    'from' => '<basepath>/custom/Extension/modules/calendsync/Ext/ActionViewMap/calendsync_apiconfig.php',
+                    'to_module' => 'calendsync',
+                ),
+        ),
     'post_install' => array(
         0 => '<basepath>/scripts/post_install.php'
     )

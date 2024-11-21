@@ -10,11 +10,6 @@ $inputJSON = file_get_contents('php://input');
 $input = json_decode($inputJSON, TRUE);
 
 if ($input['event'] === "invitee.created") {
-    $questionsAnswers = "";
-    foreach ($input['payload']['questions_and_answers'] as $key => $value) {
-        $questionsAnswers .= "Question" . ++$key . " - " . $value['question'] . "\n" . "Answer -" . $value['answer'] . "\n";
-    }
-
     $getEmailDetails = $suiteCalendlyUtils->getEmailDetails($input['payload']['email']);
     $beanId = $getEmailDetails['bean_id'] ?? "";
     $beanModule = $getEmailDetails['bean_module'] ?? "";
@@ -49,12 +44,13 @@ if ($input['event'] === "invitee.created") {
     }
 
     if (!empty($input['payload']['uri'])) {
+        $eventName = $eventDetailsFromPayload['name'];
         $createMeeting = BeanFactory::newBean("Meetings");
         $createMeeting->name = "Scheduled Meeting with " . $input['payload']['name'];
-        $createMeeting->calendsync_event_name = $eventDetailsFromPayload['name'];
+        $createMeeting->calendsync_event_name = $eventName;
         $createMeeting->calendsync_email = $input['payload']['email'];
         $createMeeting->calendsync_uuid = $eventUUID;
-        $createMeeting->description = $questionsAnswers;
+        $createMeeting->description = "";
         $createMeeting->date_start = $eventDetailsFromPayload['start_time'];
         $createMeeting->date_end = $eventDetailsFromPayload['end_time'];
         $createMeeting->parent_type = $beanModule;
@@ -67,8 +63,25 @@ if ($input['event'] === "invitee.created") {
         $createMeeting->update_modified_by = false;
         $createMeeting->set_created_by = false;
         $createMeeting->update_date_entered = false;
-        $meetId = $createMeeting->save();
 
+        foreach ($input['payload']['questions_and_answers'] as $key => $value) {
+            $keyVal = $key + 1;
+            if ($keyVal > 10) {
+                break;
+            }
+            $createMeeting->{"calendsync_q" . $keyVal} = $value['question'];
+            $createMeeting->{"calendsync_a" . $keyVal} = $value['answer'];
+        }
+
+        if (stripos($eventName, "closing") !== false) {
+            $createMeeting->meeting_type_c = "Settlement";
+        } elseif (preg_match('/walkthrough|walk-through|inspection/i', $eventName)) {
+            $createMeeting->meeting_type_c = "Orientation";
+        } else {
+            $createMeeting->meeting_type_c = "Calendly";
+        }
+
+        $meetId = $createMeeting->save();
         //Relating Contact and Meeting
         if ($beanId & $meetId) {
             $modulesList = array("Contacts", "Leads", "Accounts");
@@ -90,4 +103,11 @@ if ($input['event'] === "invitee.canceled") {
     $inviteeEmail = trim($input['payload']['email']);
     $reason = trim($input['payload']['cancellation']['reason']);
     $suiteCalendlyUtils->cancelMeeting($eventUUID, $inviteeEmail, $reason);
+}
+
+if ($input['event'] === "invitee_no_show.created") {
+    $eventInfo = explode("/", trim($input['payload']['event']));
+    $eventUUID = end($eventInfo);
+    $inviteeEmail = trim($input['payload']['email']);
+    $suiteCalendlyUtils->noShowMeeting($eventUUID, $inviteeEmail);
 }
