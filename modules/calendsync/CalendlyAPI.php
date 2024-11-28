@@ -111,6 +111,8 @@ class CalendlyAPI
             if ($meetingId) {
                 $getMeeting = BeanFactory::getBean("Meetings", $meetingId);
                 $getMeeting->calendsync_no_show = "Yes";
+                $getMeeting->status = "Not Held";
+                $getMeeting->save();
             }
         }
     }

@@ -1,43 +1,54 @@
-# SuiteCRM Calendly Integration
-This is an integration between SuiteCRM and Calendly. It allows you to create a new Meeting in SuiteCRM when a new event is created in Calendly and Delete or Update the Meeting in SuiteCRM when the event is Rescheduled or Canceled in Calendly.
+Calendly API Integration Guide
+This guide provides step-by-step instructions to obtain your Calendly API keys and authorization code for integrating Calendly with your application.
 
-## Prerequisites
-1. **Calendly Account**: You need to have a Calendly account to create a new event in Calendly.
-2. **Calendly Developer Account**: You need to have a Calendly Developer account to create a new application in Calendly.
-3. **API keys**: You need to create a new application in Calendly Developer account to get the API keys.
+Steps to Get Calendly API Keys
+Visit the Calendly Developer Portal
+Navigate to the Calendly Developer Portal.
 
-## Authorization Code in Calendly
-1. Use the below URL to get the Authorization code in Calendly.
-```html
-https://auth.calendly.com/oauth/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT
-```
-2. Replace the `YOUR_CLIENT_ID` with the Client ID of the application you created in Calendly Developer account.
-3. Replace the `YOUR_REDIRECT` with the Redirect URL of the application you provided in Calendly Developer account.
-4. Open the URL in the browser and login with your Calendly account.
-5. You will get the Authorization code in the URL. Copy the Authorization code.
+Create an Account or Log In
 
-## Access Token and Refresh Token in Calendly
-1. Use the below URL to get the Access Token in Calendly.
-```html
-https://auth.calendly.com/oauth/token
-```
-2. Use the below parameters in the body.
-```json
-{
-    "client_id": "YOUR_CLIENT_ID",
-    "client_secret": "YOUR_CLIENT SECRET",
-    "grant_type": "authorization_code",
-    "code": "YOUR_AUTHORIZATION_CODE",
-    "redirect_uri": "YOUR_REDIRECT_URI"
-}
-```
-3. Replace the `YOUR_CLIENT_ID` with the Client ID of the application you created in Calendly Developer account.
-4. Replace the `YOUR_CLIENT_SECRET` with the Client Secret of the application you created in Calendly Developer account.
-5. Replace the `YOUR_AUTHORIZATION_CODE` with the Authorization code you got in the previous step.
-6. Replace the `YOUR_REDIRECT_URI` with the Redirect URL of the application you provided in Calendly Developer account.
-7. Send the POST request to the URL using Postman or any other API testing tool.
-8. You will get the Access Token and Refresh Token in the response.
-9. Copy the Access Token and Refresh Token.
+If you don’t have an account, sign up for one.
+If you already have an account, log in.
+Create a New App
 
-## SuiteCRM Configuration
-1. Goto `https://mar-dev-atm.powerplaydestination.com/index.php?module=calendsync&action=EditView` and enter the Client ID, Client Secret, Refresh Token, and click on the `Save` button.
+Click on Create New App.
+Fill in the App Details
+
+Provide the necessary details, including the app name.
+Provide a Redirect URI
+
+Enter your Redirect URI, e.g., https://website.com.
+Copy App Credentials
+
+Once created, copy the following details:
+Client ID
+Client Secret
+Redirect URI
+Save these credentials for later use.
+
+Steps to Get Calendly Authorization Code
+Build the Authorization URL
+Using your Client ID and Redirect URI, construct the following URL:
+https://auth.calendly.com/oauth/authorize?client_id=YOUR_CLIENT_ID&response_type=code&redirect_uri=YOUR_REDIRECT_URI
+
+Replace:
+
+YOUR_CLIENT_ID with your actual Client ID.
+YOUR_REDIRECT_URI with your actual Redirect URI.
+Visit the URL
+Open the constructed URL in your browser.
+
+Authorize the App
+
+Log in if prompted.
+Authorize the app when requested.
+Copy the Authorization Code
+After authorization, you will be redirected to your provided Redirect URI.
+The URL will include a code parameter, e.g.:
+https://website.com?code=f04281d639d8248435378b0365de7bd1f53bf452eda187d5f1e07ae7f04546d6
+Copy the value of the code parameter.
+Paste the Authorization Code
+Use the copied code in the Authorize Code field of your application.
+Notes
+Ensure that your Redirect URI matches exactly what you entered when creating your app.
+Store your Client ID, Client Secret, and Authorization Code securely to prevent unauthorized access.
