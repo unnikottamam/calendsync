@@ -79,22 +79,19 @@ class CalendsyncController extends SugarController
     private function generateAccessRefreshTokens($clientId, $clientSecret, $redirectUri, $authorizeCode): array
     {
         $url = 'https://auth.calendly.com/oauth/token';
-        $data = [
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
             'grant_type' => 'authorization_code',
             'client_id' => $clientId,
             'client_secret' => $clientSecret,
             'redirect_uri' => $redirectUri,
             'code' => $authorizeCode
-        ];
-        $options = [
-            'http' => [
-                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-                'method' => 'POST',
-                'content' => http_build_query($data)
-            ]
-        ];
-        $context = stream_context_create($options);
-        $result = file_get_contents($url, false, $context);
+        ]));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
         $response = json_decode($result, true);
         $accessToken = $response['access_token'];
         $refreshToken = $response['refresh_token'];
