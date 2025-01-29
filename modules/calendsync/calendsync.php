@@ -50,6 +50,10 @@ if ($input['event'] === "invitee.created") {
         $createMeeting->calendsync_event_name = $eventName;
         $createMeeting->calendsync_email = $input['payload']['email'];
         $createMeeting->calendsync_uuid = $eventUUID;
+        $cancelLink = $input['payload']['cancel_url'];
+        $rescheduleLink = $input['payload']['reschedule_url'];
+        $createMeeting->calendsync_cancel_link = $cancelLink;
+        $createMeeting->calendsync_reschedule_link = $rescheduleLink;
         $createMeeting->description = "";
         $createMeeting->date_start = $eventDetailsFromPayload['start_time'];
         $createMeeting->date_end = $eventDetailsFromPayload['end_time'];
